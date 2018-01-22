@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="co.kr.fakebook.mapper.FriendsMapper">
+	<select id="getAgreeFriendData" parameterType="int" resultType="co.kr.fakebook.VO.FriendsInfoVO">
+		SELECT * FROM FriendsInfo WHERE id = #{FRIENDSINFO_ID}
+	</select>
+	
+ 	<insert id="requestFriend" parameterType="hashmap">
+ 		INSERT INTO FriendsInfo (RequestUser_id , ResponseUser_id) VALUES( #{RequestUser_id} , #{ResponseUser_id})
+ 	</insert>
+ 	<insert id="insertRequestFriend" parameterType="co.kr.fakebook.VO.FriendsInfoVO">
+ 		INSERT INTO Friends (Users_id , Friends_id) VALUES ( #{RequestUser_id} , #{ResponseUser_id} )
+ 	</insert>
+ 	<insert id="insertResponseFriend" parameterType="co.kr.fakebook.VO.FriendsInfoVO">
+ 		INSERT INTO Friends (Users_id , Friends_id) VALUES (  #{ResponseUser_id} , #{RequestUser_id} )
+ 	</insert>
+ 	
+ 	<delete id="deleteFriendsInfo" parameterType="int"> 
+ 		DELETE FROM FriendsInfo WHERE id = #{FRIENDSINFO_ID}
+ 	</delete>
+ 	
+ 	<delete id="deleteFriend" parameterType="int">
+ 		DELETE FROM Friends WHERE id = #{FRIENDS_ID}
+ 	</delete>
+</mapper>

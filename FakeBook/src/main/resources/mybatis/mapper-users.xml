@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding= "UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="co.kr.fakebook.mapper.UsersMapper">
+	<select id="overlapUser" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM Users WHERE useremail = #{useremail}
+	</select>
+	
+	<select id="loginUser" parameterType="hashmap" resultType="hashmap">
+		SELECT id , username FROM Users WHERE useremail = #{useremail} AND userpassword = #{userpassword}
+	</select>
+	
+	<select id="searchUser" parameterType="string" resultType="hashmap">
+		SELECT 
+		UsersInfo.id, 
+		IF( ISNULL(profile_id) , 'NULL' , ( SELECT imgPath FROM UserImage WHERE id = profile_id  ) ) as profileImgPath,
+		Users.username
+		FROM UsersInfo JOIN Users
+		ON UsersInfo.Users_id = Users.id
+		WHERE Users_id IN( (SELECT id FROM Users WHERE username LIKE CONCAT('%',#{keyword},'%') ) );
+	</select>
+	
+	<select id="getUserProfile" parameterType="int" resultType="hashmap">
+		SELECT 
+		id , 
+		(SELECT username FROM Users WHERE id = #{User_id}) as userName , 
+		IF( ISNULL(profile_id) , 'NULL' , ( SELECT imgPath FROM UserImage WHERE id = profile_id  ) ) as profileImgPath , 
+		IF( ISNULL(cover_id) , 'NULL' , ( SELECT imgPath FROM UserImage WHERE id = cover_id  ) ) as coverImgPath
+		FROM UsersInfo WHERE Users_id = #{User_id};
+	</select>
+	
+ 	<insert id="insertUser" parameterType="hashmap">
+ 		INSERT INTO Users( username , useremail , userpassword ) VALUES ( #{username} , #{useremail} , #{userpassword} )
+ 	</insert>
+ 	<insert id="insertUserInfo" parameterType="hashmap">
+ 		INSERT INTO
+ 		UsersInfo
+ 		( Users_id )
+ 		VALUES
+ 		( (SELECT id FROM Users WHERE useremail = #{useremail}) )
+ 	</insert>
+
+ 	
+</mapper>
