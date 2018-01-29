@@ -50,6 +50,7 @@ public class UserController {
 			}
 		} else {
 			result.put("success","false");
+			result.put("message","이미 사용중인 이메일입니다.");
 		}
 		
 		return result;
@@ -77,7 +78,7 @@ public class UserController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/{id}",produces="application/json", method = RequestMethod.GET)
+	@RequestMapping(value = "/profile/{id}",produces="application/json", method = RequestMethod.GET)
 	public @ResponseBody Map<String, String> userGetProfile(@PathVariable(value="id") int User_id) throws JsonProcessingException {
 		// RESULT
 		this.result = new HashMap<String , String>();

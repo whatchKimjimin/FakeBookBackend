@@ -4,9 +4,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
  
 <mapper namespace="co.kr.fakebook.mapper.FriendsMapper">
+	<select id="userFriendList" parameterType="int" resultType="hashmap">
+		SELECT Users.id , Users.username , IFNULL( (SELECT imgPath FROM UserImage WHERE id = UsersInfo.profile_id) , 'NULL' ) AS 'imgPath'
+		FROM Friends JOIN Users
+		ON Friends.Friends_id = Users.id
+		JOIN UsersInfo
+		ON Friends.Users_id = UsersInfo.Users_id
+		WHERE Friends.Users_id = #{USER_ID}
+	</select>
 	<select id="getAgreeFriendData" parameterType="int" resultType="co.kr.fakebook.VO.FriendsInfoVO">
 		SELECT * FROM FriendsInfo WHERE id = #{FRIENDSINFO_ID}
 	</select>
+	
+	<select id="getRequestFriendList" parameterType="int" resultType="hashmap">
+		SELECT FriendsInfo.id , Users.id as 'user_id' , Users.username , IFNULL( (SELECT imgPath FROM UserImage WHERE id = UsersInfo.profile_id) , 'NULL' ) AS 'imgPath' , FriendsInfo.created , 0 as 'hide'
+		FROM FriendsInfo JOIN Users
+		ON FriendsInfo.RequestUser_id = Users.id 
+		JOIN UsersInfo
+		ON FriendsInfo.RequestUser_id = UsersInfo.Users_id
+		WHERE ResponseUser_id = #{USER_ID}
+		ORDER BY FriendsInfo.created DESC
+	</select>
+	<select id="userFriendCheck" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*) FROM Friends WHERE Users_id = #{Users_id} AND Friends_id = #{Friends_id}
+	</select>
+	
 	
  	<insert id="requestFriend" parameterType="hashmap">
  		INSERT INTO FriendsInfo (RequestUser_id , ResponseUser_id) VALUES( #{RequestUser_id} , #{ResponseUser_id})

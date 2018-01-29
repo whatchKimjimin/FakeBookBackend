@@ -8,6 +8,9 @@ import co.kr.fakebook.VO.FriendsInfoVO;
 public interface FriendsDao {
 	// REQUEST FRIEND
 	public int requestFriend(Map<String , String> reqParam);
+	// REQUEST FRIEND LIST
+	public List<Map<String, String>> requestFriendList(int USER_ID);
+	
 	
 	//------ AGREE FRIEND
 	// AGREE REQUEST FRIEND
@@ -27,4 +30,9 @@ public interface FriendsDao {
 	public List<Map <String , String>> userFriendList(int USER_ID);
 	// USER RESPONSE LIST
 	public List<Map <String , String>> userResponseFriendList(int USER_ID);
+	
+	
+	// USER FRIENDS CHECK
+	public int userFriendCheck(Map<String , String> reqParam);
+	
 }

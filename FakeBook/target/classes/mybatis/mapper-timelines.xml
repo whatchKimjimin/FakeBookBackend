@@ -5,16 +5,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  
 <mapper namespace="co.kr.fakebook.mapper.TimeLinesMapper">	
  	<select id="getTimeLines" parameterType="int" resultType="hashmap">
- 		SELECT * 
- 		FROM TimeLines
- 		WHERE Users_id in (SELECT Friends_id FROM Friends WHERE Users_id = #{USER_ID}) or Users_id = #{USER_ID};
+ 		SELECT Timelines.* , Users.username  ,
+ 		ABS( TIMESTAMPDIFF(HOUR , now() , Timelines.created) ) as 'WRITEHOUR' ,
+ 		IF( ( SELECT id FROM Likes WHERE TimeLines_id = Timelines.id AND Users_id = #{USER_ID} ) > 0 , 'TRUE' , 'FALSE' ) as 'LIKE' , 
+ 		( SELECT COUNT(*) FROM Likes WHERE TimeLines_id = TimeLines.id  ) as 'LikeCount' ,
+ 		( SELECT COUNT(*) FROM Comments WHERE TimeLines_id = TimeLines.id ) as 'CommentCount'
+		FROM TimeLines JOIN Users
+		ON Timelines.Users_id = Users.id
+		WHERE Users_id in (SELECT Friends_id FROM Friends WHERE Users_id = #{USER_ID}) or Users_id = #{USER_ID}
+		ORDER BY Timelines.created DESC;
+ 	</select>
+ 	
+ 	<select id="getMyTimeLines" parameterType="int" resultType="hashmap"> 
+ 		SELECT Timelines.* , Users.username  , ABS( TIMESTAMPDIFF(HOUR , now() , Timelines.created) ) as 'WRITEHOUR'
+ 		FROM TimeLines JOIN Users
+ 		ON Timelines.Users_id = Users.id
+ 		WHERE Users_id = #{USER_ID}
+ 		ORDER BY Timelines.created DESC
+ 	</select>	
+ 	
+ 	<select id="getComment" parameterType="int" resultType="hashmap">
+ 		SELECT Comments.* , Users.username
+		FROM Comments
+		JOIN Users
+		ON Comments.Users_id = Users.id
+		WHERE TimeLines_id = #{TIMELINE_ID}
+		ORDER BY Comments.created DESC;
  	</select>
  	
  	<insert id="insertTimeLine" parameterType="hashmap">
  		INSERT INTO TimeLines (content , imgPath , Users_id) VALUES ( #{content} , #{imgPath} , #{Users_id} )
  	</insert>
+ 	<insert id="insertLike" parameterType="hashmap">
+ 		INSERT INTO Likes ( Users_id , TimeLines_id )VALUES( #{Users_id} , #{TimeLines_id}  )
+ 	</insert>
+ 	<insert id="insertComment" parameterType="hashmap">
+ 		INSERT INTO Comments ( content , Users_id , TimeLines_id )VALUES( #{content} , #{Users_id} , #{TimeLines_id} )
+ 	</insert>
  	
  	<delete id="deleteTimeLine" parameterType="int">
  		DELETE FROM TimeLines WHERE id = #{TIMELINE_ID}
+ 	</delete>
+ 	<delete id="deleteLike" parameterType="hashmap">
+ 		DELETE FROM Likes WHERE Users_id = #{Users_id} AND TimeLines_id = #{TimeLines_id}
  	</delete>
 </mapper>

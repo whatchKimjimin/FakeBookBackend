@@ -44,14 +44,22 @@ public class FriendsServiceImpl implements FriendsService{
 
 	@Override
 	public List<Map<String, String>> userFriendList(int USER_ID) {
-		// TODO Auto-generated method stub
 		return friendsDao.userFriendList(USER_ID);
 	}
 
 	@Override
 	public List<Map<String, String>> userResponseFriendList(int USER_ID) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Map<String, String>> getRequestFriendList(int USER_ID) {
+		return friendsDao.requestFriendList(USER_ID);
+	}
+
+	@Override
+	public int userFriendCheck(Map<String, String> reqParam) {
+		return friendsDao.userFriendCheck(reqParam);
 	}
 	
 }

@@ -30,4 +30,29 @@ public class TimeLinesServiceImpl implements TimeLinesService{
 	public int deleteTimeLine(int TIMELINE_ID) {
 		return timeLinesDao.deleteTimeLine(TIMELINE_ID);
 	}
+
+	@Override
+	public List<Map<String, String>> getMyTimeLines(int USER_ID) {
+		return timeLinesDao.getMyTimeLines(USER_ID);
+	}
+
+	@Override
+	public int insertLike(Map<String, String> reqParam) {
+		return timeLinesDao.insertLike(reqParam);
+	}
+
+	@Override
+	public int deleteLike(Map<String, String> reqParam) {
+		return timeLinesDao.deleteLike(reqParam);
+	}
+
+	@Override
+	public List<Map<String, String>> getComment(int TIMELINE_ID) {
+		return timeLinesDao.getComment(TIMELINE_ID);
+	}
+
+	@Override
+	public int insertComment(Map<String, String> reqParam) {
+		return timeLinesDao.insertComment(reqParam);
+	}
 }

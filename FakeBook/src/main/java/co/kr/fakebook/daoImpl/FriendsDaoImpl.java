@@ -64,6 +64,16 @@ public class FriendsDaoImpl implements FriendsDao{
 		return sqlSession.delete("deleteFriend",FRIEND_ID);
 	}
 
+	@Override
+	public List<Map<String, String>> requestFriendList(int USER_ID) {
+		return sqlSession.selectList("getRequestFriendList",USER_ID);
+	}
+
+	@Override
+	public int userFriendCheck(Map<String , String> reqParam) {
+		return sqlSession.selectOne("userFriendCheck",reqParam);
+	}
+
 	
 
 	
