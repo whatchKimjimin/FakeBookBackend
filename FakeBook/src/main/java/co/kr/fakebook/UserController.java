@@ -98,15 +98,15 @@ public class UserController {
 		return result;
 	}
 	
-	@RequestMapping(value = "/search",produces="application/json", method = RequestMethod.GET)
-	public @ResponseBody Map<String, String> userSearch(@RequestParam Map<String , String> reqParam) throws JsonProcessingException {
+	@RequestMapping(value = "/search/{KEYWORD}",produces="application/json", method = RequestMethod.GET)
+	public @ResponseBody Map<String, String> userSearch(@PathVariable(value="KEYWORD") String KEYWORD) throws JsonProcessingException {
 		// RESULT 
 		this.result = new HashMap<String , String>();
 		logger.info("search");
 		// JACKSON
 		ObjectMapper mapper = new ObjectMapper();
 		// SEARCH DATA
-		List< Map<String , String> > searchData = usersService.userSearch(reqParam.get("keyword"));
+		List< Map<String , String> > searchData = usersService.userSearch(KEYWORD);
 		
 		if( searchData != null ) {
 			result.put("success", "true");

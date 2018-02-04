@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="searchUser" parameterType="string" resultType="hashmap">
 		SELECT 
-		UsersInfo.id, 
+		Users.id, 
 		IF( ISNULL(profile_id) , 'NULL' , ( SELECT imgPath FROM UserImage WHERE id = profile_id  ) ) as profileImgPath,
 		Users.username
 		FROM UsersInfo JOIN Users
